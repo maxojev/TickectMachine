@@ -1,0 +1,8 @@
+serveur
+java -Djava.rmi.server.hostname=localhost -Djava.security.policy=ticket.policy TicketMachineImpl
+
+client
+java -Djava.rmi.server.hostname=localhost -Djava.security.policy=ticket.policy Client
+
+client manager 
+java -Djava.rmi.server.hostname=localhost -Djava.security.policy=ticket.policy ClientManager

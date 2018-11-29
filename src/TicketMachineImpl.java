@@ -1,31 +1,31 @@
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class TicketMachineImpl implements TicketMachine {
 
-    private int nbTicketsDispo;
+    private int nbTicketsDispo = 6;
 
     @Override
-    public boolean bookTickets(int nb) {
+    public synchronized boolean  bookTickets(int nb) throws RemoteException, InterruptedException {
 
-        if(nb <= nbTicketsDispo){
-            return true;
-        } else{
-            return false;
+        while (nb > nbTicketsDispo){
+          System.out.println("Attente");
+          wait();
         }
-
+        nbTicketsDispo=nbTicketsDispo-nb;
+        return true;
     }
 
     @Override
-    public void addNewTickets(int nb) {
+    public synchronized void addNewTickets(int nb) throws RemoteException {
 
         System.out.println("Ticket Disponible Avant" + nbTicketsDispo);
-
-        nbTicketsDispo += nb;
-
-        System.out.println("Ticket Disponible Après" + nbTicketsDispo);
-
+//        if (nbTicketsDispo ==0)
+            nbTicketsDispo += nb;
+            System.out.println("Ticket Disponible Apres" + nbTicketsDispo);
+            notify();
     }
 
     public static void main(String[] args){
